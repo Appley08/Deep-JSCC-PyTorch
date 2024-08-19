@@ -66,8 +66,8 @@ def evaluate_epoch(model, param, data_loader):
 def config_parser_pipeline():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default='cifar10', type=str,
-                        choices=['cifar10', 'imagenet'], help='dataset')
+    parser.add_argument('--dataset', default='imagenet', type=str,
+                        choices=['imagenet', 'imagenet'], help='dataset')
     parser.add_argument('--out', default='./out', type=str, help='out_path')
     parser.add_argument('--disable_tqdm', default=False, type=bool, help='disable_tqdm')
     parser.add_argument('--device', default='cuda:0', type=str, help='device')
@@ -97,7 +97,7 @@ def main_pipeline():
     params['snr_list'] = args.snr_list
     params['ratio_list'] = args.ratio_list
     params['channel'] = args.channel
-    if dataset_name == 'cifar10':
+    if dataset_name == 'imagenet':
         params['batch_size'] = 64  # 1024
         params['num_workers'] = 4
         params['epochs'] = 1000
@@ -146,14 +146,14 @@ def train_pipeline(params):
 
     dataset_name = params['dataset']
     # load data
-    if dataset_name == 'cifar10':
+    if dataset_name == 'imagenet':
         transform = transforms.Compose([transforms.ToTensor(), ])
-        train_dataset = datasets.CIFAR10(root='../dataset/', train=True,
+        train_dataset = datasets.imagenet(root='../dataset/', train=True,
                                          download=True, transform=transform)
 
         train_loader = DataLoader(train_dataset, shuffle=True,
                                   batch_size=params['batch_size'], num_workers=params['num_workers'])
-        test_dataset = datasets.CIFAR10(root='../dataset/', train=False,
+        test_dataset = datasets.imagenet(root='../dataset/', train=False,
                                         download=True, transform=transform)
         test_loader = DataLoader(test_dataset, shuffle=True,
                                  batch_size=params['batch_size'], num_workers=params['num_workers'])
@@ -312,14 +312,14 @@ def train(args, ratio: float, snr: float):  # deprecated
 
     device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
     # load data
-    if args.dataset == 'cifar10':
+    if args.dataset == 'imagenet':
         transform = transforms.Compose([transforms.ToTensor(), ])
-        train_dataset = datasets.CIFAR10(root='../dataset/', train=True,
+        train_dataset = datasets.imagenet(root='../dataset/', train=True,
                                          download=True, transform=transform)
 
         train_loader = DataLoader(train_dataset, shuffle=True,
                                   batch_size=args.batch_size, num_workers=args.num_workers)
-        test_dataset = datasets.CIFAR10(root='../dataset/', train=False,
+        test_dataset = datasets.imagenet(root='../dataset/', train=False,
                                         download=True, transform=transform)
         test_loader = DataLoader(test_dataset, shuffle=True,
                                  batch_size=args.batch_size, num_workers=args.num_workers)
@@ -403,8 +403,8 @@ def config_parser():  # deprecated
     parser.add_argument('--ratio_list', default=['1/3',
                         '1/6', '1/12'], nargs='+', help='ratio_list')
     parser.add_argument('--num_workers', default=0, type=int, help='num_workers')
-    parser.add_argument('--dataset', default='cifar10', type=str,
-                        choices=['cifar10', 'imagenet'], help='dataset')
+    parser.add_argument('--dataset', default='imagenet', type=str,
+                        choices=['imagenet', 'imagenet'], help='dataset')
     parser.add_argument('--parallel', default=False, type=bool, help='parallel')
     parser.add_argument('--if_scheduler', default=False, type=bool, help='if_scheduler')
     parser.add_argument('--step_size', default=640, type=int, help='scheduler')
